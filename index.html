@@ -5,10 +5,35 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="game-canvas" width="600" height="400"></canvas>
+    <div id="main-menu">
+        <h1 align="center">ЗМЕЙКА</h1>
+            <div class="settings-group">
+                <label>Длительность хода (мс):</label>
+                <input type="number" id="speed-game-setting" min="50" max="500" value="150">
+            </div>
+            <div class="settings-group">
+                <label>Количество еды:</label>
+                <input type="number" id="value-food-setting" min="1" max="10" value="1">
+            </div>
+            <div class="settings-group">
+                <label>Насыщенность еды:</label>
+                <input type="number" id="valueeat-food-setting" min="1" max="10" value="1">
+            </div>
+            <div class="settings-group">
+                <label>Ширина поля:</label>
+                <input type="number" id="size-width-setting" min="10" max="50" value="30">
+            </div>
+            <div class="settings-group">
+                <label>Высота поля:</label>
+                <input type="number" id="size-height-setting" min="10" max="50" value="30">
+            </div>
+            <button id="play-btn">Играть</button>
+    </div>
+    <div id="game-container" class="screen">
+        <canvas id="game-canvas"></canvas>
         <div id="score">Счет: 0</div>
     </div>
+    <script src="js/main.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>

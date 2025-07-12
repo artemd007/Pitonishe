@@ -4,35 +4,103 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: #f0f0f0;
+    background: #000000;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Главное правило - скрыть скроллы */
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
 }
 
+.screen.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#main-menu {
+    background: linear-gradient(135deg, #1a2a6c, #62bbea, #1a2a6c);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color:white;
+    padding: 12px 25px;
+    border-radius: 15px;
+}
+
+.menu-content {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.settings-group {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+}
+
+.settings-group label {
+    width: 200px;
+    text-align: right;
+    margin-right: 15px;
+}
+
+.settings-group input {
+    width: 80px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+}
+
+#play-btn {
+    display: block;
+    margin: 25px auto 0;
+    padding: 12px 25px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#play-btn:hover {
+    background: #52c958;
+    transform: scale(1.05);
+}
+
 #game-container {
-    position: relative;
+    background: #000;
+    flex-direction: column;
 }
 
 #game-canvas {
     background: #000;
     border: 2px solid #333;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    width: 100vw;
-    height: 100vh;
-    display: block;
-    object-fit: contain; /* Сохраняет пропорции */
-    display: block; /* Убирает лишнее пространство под inline-элементами */
+    max-width: 100%;
+    max-height: 80vh;
 }
 
 #score {
     position: absolute;
     top: 20px;
-    left: 10px;
+    left: 20px;
     color: white;
     font-size: 20px;
+    z-index: 10;
+}
+
+#back-to-menu {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
     z-index: 10;
 }

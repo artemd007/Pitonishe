@@ -1,10 +1,10 @@
 // Основные константы
 // Константы сетки и размера тайла
-const GRID_WIDTH = 30;   // Ширина сетки в тайлах
-const GRID_HEIGHT = 30;  // Высота сетки в тайлах
+let GRID_WIDTH = 30;   // Ширина сетки в тайлах
+let GRID_HEIGHT = 30;  // Высота сетки в тайлах
 const TILE_SIZE = 20;    // Базовый размер тайла в пикселях
 
-const GAME_SPEED = 150; // мс
+let GAME_SPEED = 150; // мс
 const SIZE = 0;
 
 // Игровые элементы
@@ -14,13 +14,15 @@ const scoreElement = document.getElementById('score');
 
 // Состояние игры
 let snake = [{x: 0, y: 0}];
-let food = {x: 0, y: 0};
+let food = [{x: 0, y: 0}];
 let direction = 'RIGHT';
 let olddirection = direction;
 let nextDirection = [];
 let score = 0;
 let gameRunning = true;
 let oldgridCanvas = null;
+let foodvalue = 1;
+let foodcount = 1;
 
 let touchStartX = 0;
 let touchStartY = 0;
@@ -28,6 +30,12 @@ let touchStartY = 0;
 // Инициализация игры
 function initGame() {
     // Установка размеров canvas
+    GRID_WIDTH = Number(document.getElementById('size-width-setting').value);
+    GRID_HEIGHT = Number(document.getElementById('size-height-setting').value);
+    GAME_SPEED = Number(document.getElementById('speed-game-setting').value);
+    foodvalue = Number(document.getElementById('valueeat-food-setting').value);
+    foodcount = Number(document.getElementById('value-food-setting').value);
+
     canvas.width = GRID_WIDTH * TILE_SIZE;
     canvas.height = GRID_HEIGHT * TILE_SIZE;
 	
@@ -90,13 +98,17 @@ function updateGame() {
     snake.unshift(head);
     
     // Проверка съедения еды
-    if (head.x === food.x && head.y === food.y) {
-        score++;
+    for(let i = 0; i < food.length; i++)
+    if (head.x === food[i].x && head.y === food[i].y) {
+        score += foodvalue;
         scoreElement.textContent = `Счет: ${score}`;
-        spawnFood();
-    } else {
+        food.splice(i, 1);
+        spawnFood(1);
+    } 
+    else if(snake.length - 3 > score)
+    {
         snake.pop();
-    }
+    } 
 }
 
 // Отрисовка игры
@@ -129,15 +141,18 @@ function drawGame() {
     
     // Отрисовка еды
     ctx.fillStyle = '#F44336';
-    ctx.beginPath();
-    ctx.arc(
-        food.x * TILE_SIZE + TILE_SIZE/2,
-        food.y * TILE_SIZE + TILE_SIZE/2,
-        TILE_SIZE/2,
-        0,
-        Math.PI * 2
-    );
-    ctx.fill();
+    for(let i = 0; i < food.length; i++)
+    {
+        ctx.beginPath();
+        ctx.arc(
+            food[i].x * TILE_SIZE + TILE_SIZE/2,
+            food[i].y * TILE_SIZE + TILE_SIZE/2,
+            TILE_SIZE/2,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+    }
 }
 
 function drawGrid() {
@@ -165,22 +180,23 @@ function drawGrid() {
 }
 
 // Генерация еды
-function spawnFood() {
+function spawnFood(countfood) {
     const availablePositions = [];
     
     // Сбор всех свободных позиций
     for (let x = 0; x < GRID_WIDTH; x++) {
         for (let y = 0; y < GRID_HEIGHT; y++) {
-            if (!snake.some(s => s.x === x && s.y === y)) {
+            if (!snake.some(s => s.x === x && s.y === y) && !food.some(s => s.x === x && s.y === y)) {
                 availablePositions.push({x, y});
             }
         }
     }
     
     // Выбор случайной позиции
+    for(let i = 0; i < countfood; i++)
     if (availablePositions.length > 0) {
         const randomIndex = Math.floor(Math.random() * availablePositions.length);
-        food = availablePositions[randomIndex];
+        food.push(availablePositions[randomIndex]);
     }
 }
 
@@ -190,24 +206,23 @@ function gameOver() {
     alert(`Игра окончена! Ваш счет: ${score}`);
     
     // Рестарт игры
-    resetGame();
+    divGame.classList.remove('active'); // Убираем активное состояние у игры
+	divMenu.classList.add('active'); // Добавляем активное состояние меню
 }
 
 // Сброс игры
 function resetGame() {
-    snake = [{x: 0, y: 15}];
+    snake = [{x: 0, y: Math.floor(GRID_HEIGHT / 2)}];
     direction = 'RIGHT';
 	olddirection = direction;
     nextDirection = [];
     score = 0;
     scoreElement.textContent = `Счет: ${score}`;
     gameRunning = true;
-    spawnFood();
+    spawnFood(foodcount - 1);
 	
 	// Инициализация змейки (добавляем 2 сегмента)
 	const head = {...snake[0]};
-	snake.unshift(head);
-	snake.unshift(head);
 }
 
 // Обработка клавиатуры
@@ -259,4 +274,4 @@ function handleTouchMove(e) {
 }
 
 // Запуск игры при загрузке страницы
-window.addEventListener('load', initGame);
+//window.addEventListener('load', initGame);
